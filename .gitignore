@@ -3,3 +3,9 @@ venv
 .idea
 __pycache__/
 *__pycache__/*
+AGENTS.md
+node_modules/
+web/node_modules/
+web/.next/
+web/out/
+ctx/

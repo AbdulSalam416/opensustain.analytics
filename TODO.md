@@ -3,32 +3,9 @@
 Working list for bringing the Next.js app in `web/` to full parity with
 `streamlit-app-tab.py`, then putting it in production.
 
-All nine Streamlit tabs now have a Next.js equivalent, and the organisation
-views filter by country and type. What is left is cross-cutting (E), one data
-decision, and the production blockers.
-
----
-
-## E. Export on every chart
-
-Only the ecosystem sunburst can be exported today (PNG, SVG, CSV). Streamlit
-offers export on one tab and only as HTML, so this overtakes it — but it needs
-to be consistent across all nine charts, not one.
-
-- [ ] Lift the toolbar export menu out of `sunburst-toolbar.tsx` into a shared
-      component so every chart panel gets the same control
-- [ ] Reuse `lib/sunburst/export.ts` for the two remaining sunbursts — it is
-      already generic over an `SVGSVGElement`
-- [ ] The eleven bar charts share `HorizontalBarChart`, so one export control
-      there covers all of them
-- [ ] ECharts charts: PNG via `getDataURL`. **SVG needs `SVGRenderer`
-      registered** in `echart.tsx`, which currently registers `CanvasRenderer`
-      only, and the instance has to be created with that renderer — so it is a
-      per-chart decision, not a flag
-- [ ] CSV for every chart from the rows actually on screen, respecting the
-      active filters rather than dumping the whole payload
-- [ ] Filenames should carry the view: metric, category and top-N, so a
-      downloaded file is identifiable later
+All nine Streamlit tabs now have a Next.js equivalent, the organisation views
+filter by country and type, and every chart exports. What is left is one data
+decision and the production blockers.
 
 ---
 
@@ -102,6 +79,10 @@ Independent of feature parity. None of these are about the charts.
       one row. Dismissal persists in localStorage and is applied by the inline
       script in `layout.tsx`, so a closed bar never flashes and an open one
       never shifts the page
+- [x] **E.** Export on every chart — 19 of 19, against one before. PNG and CSV
+      everywhere, plus SVG on the three sunbursts, which are already vector.
+      The CSV is the rows on screen, so a top-25 filtered view exports 25 rows,
+      and filenames carry the view: metric, category, top-N and active filters
 - [x] **Country and organisation-type filters** — one bar at the top of
       `/organizations` driving all seven charts, where Streamlit repeats the
       pair on each of its four organisation tabs. Options are the payload's own

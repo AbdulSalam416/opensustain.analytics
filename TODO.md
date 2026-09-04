@@ -112,7 +112,7 @@ noted together.
 
 ## P2 — structural
 
-- [ ] **No chart state is in the URL**, so no view can be linked, shared, or
+- [x] **No chart state is in the URL**, so no view can be linked, shared, or
       reached with Back, and nothing can deep-link into `/projects` with a
       category preselected. *Parity + research (Linear, OWID Grapher,
       landscape2).* A `useViewParams` hook over `useSearchParams`; `ViewState`

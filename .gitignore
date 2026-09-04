@@ -8,5 +8,7 @@ node_modules/
 web/node_modules/
 web/.next/
 web/out/
+# Rewritten by every `tsc --noEmit`, so it churns on every typecheck.
+web/tsconfig.tsbuildinfo
 ctx/
 CLAUDE.md

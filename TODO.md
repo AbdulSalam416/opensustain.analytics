@@ -1,11 +1,137 @@
 # TODO — retiring the Streamlit dashboard
 
 Working list for bringing the Next.js app in `web/` to full parity with
-`streamlit-app-tab.py`, then putting it in production.
+`streamlit-app-tab.py`, then past it.
 
-All nine Streamlit tabs now have a Next.js equivalent, the organisation views
-filter by country and type, and every chart exports. What is left is one data
-decision and the production blockers.
+All nine Streamlit tabs have a Next.js equivalent, the organisation views filter
+by country and type, and every chart exports. What follows came out of two
+audits: a seven-dimension parity audit against `tabs/*.py` (42 confirmed
+findings, 3 refuted) and a research pass over comparable analytics products
+(40 patterns from Our World in Data, Climate TRACE, ecosyste.ms, OSS Insight,
+deps.dev, GitHub Innovation Graph, Datawrapper, Linear, Metabase and others).
+
+Ordered by impact. P0 is broken behaviour, P1 is what the product is missing
+that its audience needs, P2 is the larger structural work.
+
+---
+
+## P0 — broken now
+
+- [ ] **Ecosystem search always says "Nothing matches"** at the root, which is
+      the home page's default state. `matchCount` counts arcs with
+      `item.visible`, but the chart draws two rings at a time so every project
+      is parked invisible at the root — the count is structurally 0 while the
+      ring correctly dims to the matches. Same `visible`-is-not-data confusion
+      already fixed for CSV export. `ecosystem-sunburst.tsx:176`
+- [ ] **"All 1,274 organizations" paints nothing.** `HorizontalBarChart` sizes
+      its canvas from the row count with no ceiling: 33,188px, past Firefox's
+      32,767px limit and past Chrome's at dpr 2. `horizontal-bar-chart.tsx:169`
+- [ ] **Projects Over Time keeps a hardcoded 210px axis gutter** after every
+      sibling moved to a measured one, so on a 360px phone the plot area is
+      122px wide. It also truncates 32 of the 81 sub-category names on desktop
+      with no recovery path. `projects-over-time-chart.tsx:122`
+- [ ] **Rankings y-axis labels are clipped off-canvas below ~530px** — the
+      label width is a fixed 180px inside a gutter that shrinks with the
+      container. `project-rankings-chart.tsx:150`
+- [ ] **Keyword chart reads "All 300 keywords" while drawing 30.** `TopNField`
+      discards a caller default that falls *between* its fixed choices; the
+      earlier fix only handled a default above every option.
+      `top-n-field.tsx:28`
+- [ ] **Organisation sunburst goes blank** when a page filter empties the
+      organisation you had zoomed into: the focus falls back to the root only
+      when the id is missing, never when the node is emptied, and its memo
+      never invalidates on a filter change. `organization-sunburst.tsx:145`
+- [ ] **Its tooltip promises "Click to select"** but a plain click navigates
+      off-site, and a double-click opens the repository three times.
+      `org-tree.ts:78`, `sunburst-svg.tsx:301`
+- [ ] **Sub-category sunburst announces every wedge as "N projects"** to a
+      screen reader; its leaves are organisations. `sunburst-svg.tsx:465`
+- [ ] **Ecosystem hole keeps saying "13 categories"** after the legend isolates
+      a subset — the project count follows the filter, the category count reads
+      the raw child array. `ecosystem-sunburst.tsx:394`
+- [ ] **Heatmap top-N reads "All 0 topics"** for the whole 820 KB load — the
+      toolbar renders above the loading guard. `topics-heatmap-chart.tsx:188`
+- [ ] **Organisation sunburst hardcodes 276** as its "all" ceiling and the
+      "two or more projects" threshold is prose, while `minimum_project_count`
+      and the real count are both in the payload.
+      `organization-sunburst.tsx:48`, `organizations/page.tsx:54`
+- [ ] **The type filter cannot select the "Unknown" bar it draws** (101
+      organisations), and the country filter cannot select "Not recorded" (102).
+      `organization-filters.tsx:81`
+- [ ] **The countries note names two of three non-country buckets** — Europe is
+      drawn and unaccounted for. `organizations-distribution-charts.tsx:218`
+
+## P1 — what the product is missing
+
+Where both audits agreed, the parity finding and the researched pattern are
+noted together.
+
+- [ ] **Nothing on the site says how old the data is.** Every payload carries
+      `generated_at`, `summary.json` also carries `as_of`, and neither reaches a
+      page; the footer's year comes from the visitor's clock. A May snapshot
+      renders as September. *Parity + research (Climate TRACE masthead, GitHub
+      Innovation Graph "last updated").* Render the scope line and the date in
+      the hero, and the date in the footer, formatted once server-side
+- [ ] **The provenance block is gone.** No CC-BY 4.0 attribution — which the
+      licence requires — no Ecosyste.ms credit, no dataset links.
+      `streamlit-app-tab.py:154`
+- [ ] **Sparse metrics are plotted as zero.** Citations are non-zero for 321 of
+      2,691 projects and downloads for 867, so ranking by citations draws 18
+      empty bars out of 25 and a zero-citation bubble is indistinguishable from
+      a real 1. *Research: PageSpeed "not enough data", Innovation Graph's
+      published suppression rule.* Add `lib/charts/coverage.ts`, a coverage note
+      above any chart under 50%, and suppress zero rows rather than drawing them
+      — the sunburst colour bar already does this correctly via `bins.zeros`
+- [ ] **Nine ranking metrics are offered with no definition.**
+      `total_score_combined` is the default on two routes and is a 0–6 sum of
+      six normalised metrics, which reads as a rating out of 5. DDS appears as a
+      bare median with no scale or direction. `streamlit-app-tab.py:101`
+- [ ] **`Panel` has no notes or source slot.** *Research: Datawrapper's
+      title/description/notes/source block, OWID's chart footer.* Add both, then
+      put each chart's real caveat in it — the ecosystems over-count, "projects
+      carry no country, this is the organisation's", the sparsity notes
+- [ ] **Tooltips drop most of what the payload holds.** Rankings shows 4 of 8
+      metrics and no description; the scatter drops the description and five
+      metrics; `organization_description` is emitted in three payloads and read
+      in none; `avatar_url` is typed and never rendered
+- [ ] **Top-N ceilings are below Streamlit's and ignore the payload.** Projects
+      cap at 100 where Streamlit reaches 300 and defaults to 50; organisations
+      cap at 100 of 1,274 with a default of 60; distributions default 25 vs 30.
+      Four controls hardcode a 25 the pipeline already specifies
+- [ ] **Bubble size saturates at 28px**, so 60% of points are the same dot for
+      Total Commits. Normalise against the filtered set as Plotly does
+- [ ] **The filter bar is not sticky** on a ~5,000px page, so a filter governs
+      charts far below with no on-screen reason and no control in reach
+- [ ] **The two organisation sunbursts have no search**, though the highlight
+      machinery is wired in and passed `null`
+- [ ] **The age axis sits at the bottom of a ~1,700px chart.** Streamlit moved
+      it to the top for exactly this reason
+- [ ] Heatmap legend prints raw log10 values with no label; invert it to counts
+- [ ] Ecosystem project ring keeps payload order when the colour metric changes,
+      so it reads high-to-low only for the default metric
+
+## P2 — structural
+
+- [ ] **No chart state is in the URL**, so no view can be linked, shared, or
+      reached with Back, and nothing can deep-link into `/projects` with a
+      category preselected. *Parity + research (Linear, OWID Grapher,
+      landscape2).* A `useViewParams` hook over `useSearchParams`; `ViewState`
+      is already a flat serialisable record
+- [ ] **A table twin on every chart.** *Research: OWID's Chart/Map/Table tabs.*
+      Nearly free — `useChartExport` already builds the rows on screen
+- [ ] **A `/methodology` route** stating the limitations before a reader finds
+      them. *Research: Innovation Graph's datasheet, OWID's "what you should
+      know".* The three known data defects belong here
+- [ ] **Facet counts on every filter option, and no option that leads to an
+      empty chart.** *Research: ClimateTriage's own counted browse rail —
+      this repo's named design reference — plus Algolia facet counts*
+- [ ] **Show the arithmetic behind Total Score.** *Research: Libraries.io
+      SourceRank's signed contribution list, OpenSSF Scorecard's disclosed
+      weights.* Two metrics carry 94% of it
+- [ ] **A project detail route at `/projects/[slug]`** — the missing third
+      level. Every chart dead-ends at an external repository link
+- [ ] **Drill-through on click** instead of one guessed meaning per chart
+- [ ] Verb-first entry cards on the home page, replacing the three noun cards
 
 ---
 

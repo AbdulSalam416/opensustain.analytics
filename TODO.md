@@ -90,7 +90,7 @@ noted together.
       title/description/notes/source block, OWID's chart footer.* Add both, then
       put each chart's real caveat in it — the ecosystems over-count, "projects
       carry no country, this is the organisation's", the sparsity notes
-- [ ] **Tooltips drop most of what the payload holds.** Rankings shows 4 of 8
+- [x] **Tooltips drop most of what the payload holds.** Rankings shows 4 of 8
       metrics and no description; the scatter drops the description and five
       metrics; `organization_description` is emitted in three payloads and read
       in none; `avatar_url` is typed and never rendered

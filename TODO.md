@@ -119,7 +119,7 @@ noted together.
       is already a flat serialisable record
 - [ ] **A table twin on every chart.** *Research: OWID's Chart/Map/Table tabs.*
       Nearly free — `useChartExport` already builds the rows on screen
-- [ ] **A `/methodology` route** stating the limitations before a reader finds
+- [x] **A `/methodology` route** stating the limitations before a reader finds
       them. *Research: Innovation Graph's datasheet, OWID's "what you should
       know".* The three known data defects belong here
 - [ ] **Facet counts on every filter option, and no option that leads to an

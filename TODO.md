@@ -75,18 +75,18 @@ noted together.
 - [x] **The provenance block is gone.** No CC-BY 4.0 attribution — which the
       licence requires — no Ecosyste.ms credit, no dataset links.
       `streamlit-app-tab.py:154`
-- [ ] **Sparse metrics are plotted as zero.** Citations are non-zero for 321 of
+- [x] **Sparse metrics are plotted as zero.** Citations are non-zero for 321 of
       2,691 projects and downloads for 867, so ranking by citations draws 18
       empty bars out of 25 and a zero-citation bubble is indistinguishable from
       a real 1. *Research: PageSpeed "not enough data", Innovation Graph's
       published suppression rule.* Add `lib/charts/coverage.ts`, a coverage note
       above any chart under 50%, and suppress zero rows rather than drawing them
       — the sunburst colour bar already does this correctly via `bins.zeros`
-- [ ] **Nine ranking metrics are offered with no definition.**
+- [x] **Nine ranking metrics are offered with no definition.**
       `total_score_combined` is the default on two routes and is a 0–6 sum of
       six normalised metrics, which reads as a rating out of 5. DDS appears as a
       bare median with no scale or direction. `streamlit-app-tab.py:101`
-- [ ] **`Panel` has no notes or source slot.** *Research: Datawrapper's
+- [x] **`Panel` has no notes or source slot.** *Research: Datawrapper's
       title/description/notes/source block, OWID's chart footer.* Add both, then
       put each chart's real caveat in it — the ecosystems over-count, "projects
       carry no country, this is the organisation's", the sparsity notes

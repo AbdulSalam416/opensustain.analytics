@@ -66,13 +66,13 @@ that its audience needs, P2 is the larger structural work.
 Where both audits agreed, the parity finding and the researched pattern are
 noted together.
 
-- [ ] **Nothing on the site says how old the data is.** Every payload carries
+- [x] **Nothing on the site says how old the data is.** Every payload carries
       `generated_at`, `summary.json` also carries `as_of`, and neither reaches a
       page; the footer's year comes from the visitor's clock. A May snapshot
       renders as September. *Parity + research (Climate TRACE masthead, GitHub
       Innovation Graph "last updated").* Render the scope line and the date in
       the hero, and the date in the footer, formatted once server-side
-- [ ] **The provenance block is gone.** No CC-BY 4.0 attribution — which the
+- [x] **The provenance block is gone.** No CC-BY 4.0 attribution — which the
       licence requires — no Ecosyste.ms credit, no dataset links.
       `streamlit-app-tab.py:154`
 - [ ] **Sparse metrics are plotted as zero.** Citations are non-zero for 321 of
@@ -94,19 +94,19 @@ noted together.
       metrics and no description; the scatter drops the description and five
       metrics; `organization_description` is emitted in three payloads and read
       in none; `avatar_url` is typed and never rendered
-- [ ] **Top-N ceilings are below Streamlit's and ignore the payload.** Projects
+- [x] **Top-N ceilings are below Streamlit's and ignore the payload.** Projects
       cap at 100 where Streamlit reaches 300 and defaults to 50; organisations
       cap at 100 of 1,274 with a default of 60; distributions default 25 vs 30.
       Four controls hardcode a 25 the pipeline already specifies
-- [ ] **Bubble size saturates at 28px**, so 60% of points are the same dot for
+- [x] **Bubble size saturates at 28px**, so 60% of points are the same dot for
       Total Commits. Normalise against the filtered set as Plotly does
-- [ ] **The filter bar is not sticky** on a ~5,000px page, so a filter governs
+- [x] **The filter bar is not sticky** on a ~5,000px page, so a filter governs
       charts far below with no on-screen reason and no control in reach
 - [ ] **The two organisation sunbursts have no search**, though the highlight
       machinery is wired in and passed `null`
 - [ ] **The age axis sits at the bottom of a ~1,700px chart.** Streamlit moved
       it to the top for exactly this reason
-- [ ] Heatmap legend prints raw log10 values with no label; invert it to counts
+- [x] Heatmap legend prints raw log10 values with no label; invert it to counts
 - [ ] Ecosystem project ring keeps payload order when the colour metric changes,
       so it reads high-to-low only for the default metric
 

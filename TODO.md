@@ -17,48 +17,48 @@ that its audience needs, P2 is the larger structural work.
 
 ## P0 — broken now
 
-- [ ] **Ecosystem search always says "Nothing matches"** at the root, which is
+- [x] **Ecosystem search always says "Nothing matches"** at the root, which is
       the home page's default state. `matchCount` counts arcs with
       `item.visible`, but the chart draws two rings at a time so every project
       is parked invisible at the root — the count is structurally 0 while the
       ring correctly dims to the matches. Same `visible`-is-not-data confusion
       already fixed for CSV export. `ecosystem-sunburst.tsx:176`
-- [ ] **"All 1,274 organizations" paints nothing.** `HorizontalBarChart` sizes
+- [x] **"All 1,274 organizations" paints nothing.** `HorizontalBarChart` sizes
       its canvas from the row count with no ceiling: 33,188px, past Firefox's
       32,767px limit and past Chrome's at dpr 2. `horizontal-bar-chart.tsx:169`
-- [ ] **Projects Over Time keeps a hardcoded 210px axis gutter** after every
+- [x] **Projects Over Time keeps a hardcoded 210px axis gutter** after every
       sibling moved to a measured one, so on a 360px phone the plot area is
       122px wide. It also truncates 32 of the 81 sub-category names on desktop
       with no recovery path. `projects-over-time-chart.tsx:122`
-- [ ] **Rankings y-axis labels are clipped off-canvas below ~530px** — the
+- [x] **Rankings y-axis labels are clipped off-canvas below ~530px** — the
       label width is a fixed 180px inside a gutter that shrinks with the
       container. `project-rankings-chart.tsx:150`
-- [ ] **Keyword chart reads "All 300 keywords" while drawing 30.** `TopNField`
+- [x] **Keyword chart reads "All 300 keywords" while drawing 30.** `TopNField`
       discards a caller default that falls *between* its fixed choices; the
       earlier fix only handled a default above every option.
       `top-n-field.tsx:28`
-- [ ] **Organisation sunburst goes blank** when a page filter empties the
+- [x] **Organisation sunburst goes blank** when a page filter empties the
       organisation you had zoomed into: the focus falls back to the root only
       when the id is missing, never when the node is emptied, and its memo
       never invalidates on a filter change. `organization-sunburst.tsx:145`
-- [ ] **Its tooltip promises "Click to select"** but a plain click navigates
+- [x] **Its tooltip promises "Click to select"** but a plain click navigates
       off-site, and a double-click opens the repository three times.
       `org-tree.ts:78`, `sunburst-svg.tsx:301`
-- [ ] **Sub-category sunburst announces every wedge as "N projects"** to a
+- [x] **Sub-category sunburst announces every wedge as "N projects"** to a
       screen reader; its leaves are organisations. `sunburst-svg.tsx:465`
-- [ ] **Ecosystem hole keeps saying "13 categories"** after the legend isolates
+- [x] **Ecosystem hole keeps saying "13 categories"** after the legend isolates
       a subset — the project count follows the filter, the category count reads
       the raw child array. `ecosystem-sunburst.tsx:394`
-- [ ] **Heatmap top-N reads "All 0 topics"** for the whole 820 KB load — the
+- [x] **Heatmap top-N reads "All 0 topics"** for the whole 820 KB load — the
       toolbar renders above the loading guard. `topics-heatmap-chart.tsx:188`
-- [ ] **Organisation sunburst hardcodes 276** as its "all" ceiling and the
+- [x] **Organisation sunburst hardcodes 276** as its "all" ceiling and the
       "two or more projects" threshold is prose, while `minimum_project_count`
       and the real count are both in the payload.
       `organization-sunburst.tsx:48`, `organizations/page.tsx:54`
-- [ ] **The type filter cannot select the "Unknown" bar it draws** (101
+- [x] **The type filter cannot select the "Unknown" bar it draws** (101
       organisations), and the country filter cannot select "Not recorded" (102).
       `organization-filters.tsx:81`
-- [ ] **The countries note names two of three non-country buckets** — Europe is
+- [x] **The countries note names two of three non-country buckets** — Europe is
       drawn and unaccounted for. `organizations-distribution-charts.tsx:218`
 
 ## P1 — what the product is missing

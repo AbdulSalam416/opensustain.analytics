@@ -104,10 +104,10 @@ noted together.
       charts far below with no on-screen reason and no control in reach
 - [x] **The two organisation sunbursts have no search**, though the highlight
       machinery is wired in and passed `null`
-- [ ] **The age axis sits at the bottom of a ~1,700px chart.** Streamlit moved
+- [x] **The age axis sits at the bottom of a ~1,700px chart.** Streamlit moved
       it to the top for exactly this reason
 - [x] Heatmap legend prints raw log10 values with no label; invert it to counts
-- [ ] Ecosystem project ring keeps payload order when the colour metric changes,
+- [x] Ecosystem project ring keeps payload order when the colour metric changes,
       so it reads high-to-low only for the default metric
 
 ## P2 — structural

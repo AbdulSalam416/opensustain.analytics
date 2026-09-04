@@ -32,6 +32,20 @@ Found while building C. Two artefacts in `project-attributes.json`
 
 ---
 
+## UI review leftovers
+
+From the seven-dimension review (37 confirmed, 5 refuted). The high-severity
+findings are fixed; these are what is left.
+
+- [ ] The world map is locked to 560px tall, so a phone gets ~400px of empty
+      canvas below it — scale the height with the container as the bar charts
+      now do
+- [ ] Header controls are 19-28px touch targets, under the 44px minimum: the
+      GitHub link, theme toggle and community-bar close button
+- [ ] The Topics word cloud is a remote PNG with a white background baked in,
+      so it is a white slab in dark mode
+- [ ] Four component classes are dead CSS with no markup referencing them
+
 ## Production blockers
 
 Independent of feature parity. None of these are about the charts.

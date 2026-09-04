@@ -102,7 +102,7 @@ noted together.
       Total Commits. Normalise against the filtered set as Plotly does
 - [x] **The filter bar is not sticky** on a ~5,000px page, so a filter governs
       charts far below with no on-screen reason and no control in reach
-- [ ] **The two organisation sunbursts have no search**, though the highlight
+- [x] **The two organisation sunbursts have no search**, though the highlight
       machinery is wired in and passed `null`
 - [ ] **The age axis sits at the bottom of a ~1,700px chart.** Streamlit moved
       it to the top for exactly this reason
